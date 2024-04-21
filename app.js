@@ -2,21 +2,23 @@ const form = document.querySelector("#searchForm");
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
   const searchInput = form.elements.query.value;
-  const result = await axios.get(
-    `http://api.tvmaze.com/search/shows?q=${searchInput}`
-  );
-  console.log(result.data);
-  result.data.forEach((q) => {
+  const config = { params: { q: searchInput } };
+  const result = await axios.get(`http://api.tvmaze.com/search/shows`, config);
+  result.data.forEach((d) => {
     try {
       const img = document.createElement("IMG");
-      img.src = q.show.image.medium;
+      img.src = d.show.image.medium;
       document.body.append(img);
     } catch (e) {
       console.log("NO IMAGE :(");
       return "NO IMAGE";
     }
   });
-  // const img = document.createElement("IMG");
-  // img.src = result.data[0].show.image.medium;
-  // document.body.append(img);
+  form.elements.query.value = "";
 });
+
+// form.addEventListener("onchange", function (e) {
+//   e.preventDefault();
+//   const remLI = document.querySelectorAll("IMG");
+//   remLI.remove();
+// });
